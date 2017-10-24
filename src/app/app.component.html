@@ -1,0 +1,23 @@
+<div class="button-demo">
+    <h3>按钮组件Demo</h3>
+</div>
+<ng-button (click)="defaultClick()">测试默认</ng-button>
+<ng-button class="primary">测试primary</ng-button>
+
+<div class="button-demo">
+    <h3>按钮组件Demo</h3>
+</div>
+<!-- <ng-select default="请选择"
+    [dataSrc]="testChoices1"
+    maxWordCnt="5"
+    (change)="optChanged(opt)"></ng-select>
+<ng-select [dataSrc]="testChoices2"></ng-select> -->
+
+<div class="button-demo">
+    <h3>分页组件</h3>
+</div>
+<div class="pager-container">
+    <ng-pager [page]="page" (listChange)="pageChanged($event)"></ng-pager>
+    <hr>
+    <ng-pager [page]="page2" type="simple" align="left"></ng-pager>
+</div>

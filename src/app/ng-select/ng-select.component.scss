@@ -1,0 +1,56 @@
+:host {
+    .ng-select {
+        display: inline-block;
+    }
+    ng-button {
+        display: inline-block;
+        .ng-button {
+            background: transparent;
+        }
+        .txt {
+            padding: 0 5px;
+        }
+        .iconfont {
+            font-size: 12px;
+            float: right;
+            color: #999;
+            margin-right: 5px;
+        }
+    }
+    .choices {
+        position: relative;
+        ul.items {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            border-radius: 4px;
+            display: inline-block;
+            border: 1px #ccc solid;
+            z-index: 999;
+            font-size: 12px;
+            min-width: 60px;
+            max-height: 110px;
+            overflow: auto;
+            li.item {
+                padding: 5px 10px;
+                list-style: none;
+                cursor: pointer;
+                line-height: 20px;
+                text-align: center;
+                word-break: keep-all;
+                &:hover, &.active {
+                    color: #108ee9;
+                    border-color: #108ee9;
+                    font-weight: 600;
+                }
+                &:hover {
+                    background-color: rgba(16, 142, 233, .5);
+                    color: #fff;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,52 @@
+:host {
+    .ng-pager {
+        width:100%;
+        .hidden {
+            display: none;
+        }
+        .pager-left {
+            float:left;
+            margin-left: 0;
+            font-size: 12px; 
+            color: #4190EE;
+        }
+        .pager-right {
+            margin-right: 0;
+            display: inline-block;
+            font-size: 12px;
+    
+            .inner {
+                float: left;
+                margin-left: 5px;
+                p {
+                    float: left;
+                }
+                .addition-wrap {
+                    float: left;
+                    margin: 0 5px;
+                    .jui-select {
+                        margin: 0 5px;
+                    }
+                }
+            }
+            .page-nos {
+                ul { 
+                    height: 30px; 
+                    // border: 1px solid #d0d0d0;
+                    border-radius: 2px;
+                    padding:0px;
+                    margin: 0;
+                    li {
+                        list-style: none;
+                        float: left;
+                        // border-right: 1px solid #d0d0d0;
+                        cursor: pointer;
+                        ng-button {
+                            margin: 0 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

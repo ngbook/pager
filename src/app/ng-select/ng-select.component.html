@@ -1,0 +1,26 @@
+<div class="ng-select" (click)="stopBubble($event)">
+    <ng-button [class.disabled.px]="disabled"
+        [styles]="styles" [style.width.px]="width"
+        [style.minWidth.px]="minWidth"
+        [style.height.px]="height"
+        (click)="toggleOpts()">
+        <span class="txt">
+            {{displayName || default}}
+        </span>
+        <i class="iconfont icon-up" *ngIf="showOpts"
+            (click)="toggleOpts()"></i>
+        <i class="iconfont icon-down" *ngIf="!showOpts"
+            (click)="toggleOpts()"></i>
+    </ng-button>
+    <div class="choices" *ngIf="showOpts">
+        <ul class="items" [style.min-width.px]="minWidth">
+            <li class="item"
+                *ngFor="let opt of dataSrc;trackBy:optTrack"
+                [class.active]="selected===opt.value"
+                (click)="chooseItem(opt)"
+                [style.color]="opt.color">
+                {{opt.name}}
+            </li>
+        </ul>
+    </div>
+</div>
