@@ -12,22 +12,21 @@
             <div class="addition-wrap">
                 <label class="desc" *ngIf="showJumpTool">
                     转到:
-                    <ng-select [selected]="page.curPage + 1" 
-                        (change)="onPageNoChange($event)"
-                        [dataSrc]="page.allPageNos"
-                        [height]="height">
-                    </ng-select>页
                 </label>
+                <ng-select [selected]="page.curPage + 1" 
+                    (change)="onPageNoChange($event)"
+                    [dataSrc]="page.allPageNos"
+                    [height]="height">
+                </ng-select>页
                 <span *ngIf="showTotalPages">/ 共{{page.totalPage}}页</span>
             </div>
             <div class="addition-wrap" *ngIf="showPageTool">
-                <label class="desc">每页:
-                    <ng-select [(selected)]="page.pageSize"
-                        (change)="onSizeChange($event)"
-                        [dataSrc]="page.pageSizeOpts"
-                        [height]="height">
-                    </ng-select>条
-                </label>
+                <label class="desc">每页:</label>
+                <ng-select [(selected)]="page.pageSize"
+                    (change)="onSizeChange($event)"
+                    [dataSrc]="page.pageSizeOpts"
+                    [height]="height">
+                </ng-select>条
             </div>
         </div>
         <div class="inner page-nos">
