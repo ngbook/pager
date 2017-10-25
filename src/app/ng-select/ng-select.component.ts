@@ -27,6 +27,8 @@ export class NgSelectComponent implements OnInit, OnDestroy {
     public minWidth;
     @Input()
     public maxWordCnt: number;
+    @Input()
+    public popHeight;
 
     @Input('dataSrc')
     public set data(data) {
@@ -100,7 +102,9 @@ export class NgSelectComponent implements OnInit, OnDestroy {
         event.stopPropagation();
     }
 
-    toggleOpts() {
+    toggleOpts(event) {
+        // console.log('toggle');
+        this.stopBubble(event);
         this.showOpts = !this.showOpts;
     }
     chooseItem(opt) {
@@ -118,8 +122,9 @@ export class NgSelectComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this.showOpts = false;
         });
+        // 先selectedChange，再change
+        this.selectedChange.emit(opt.value);
         this.change.emit(opt);
-        // this.selectedChange.emit(opt.value);
     }
     optTrack(index, item) {
         return item.value;

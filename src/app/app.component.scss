@@ -1,4 +1,44 @@
 
+$tabItemHeight: 26px;
+table {
+    text-align: center;
+    th {
+        word-break: keep-all;
+        color: #999;
+    }
+    td, th {
+        border-bottom: 1px solid #ccc;
+        padding: 10px;
+        height: $tabItemHeight;
+        line-height: $tabItemHeight;
+        margin: 0;
+    }
+}
 .pager-container {
-    width: 750px;
+    width: 1000px;
+    margin: 20px auto 50px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    .pager-wrap {
+        padding: 0 10px;
+        ng-pager {
+            margin: 12px;
+        }
+    }
+}
+.people-list {
+    width: 1000px;
+    .avatar {
+        $avatarRadius: #{$tabItemHeight + 10};
+        width: $avatarRadius;
+        height: $avatarRadius;
+        border-radius: $avatarRadius;
+        vertical-align: middle;
+    }
+}
+.empty-wrap {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    margin: 10px;
 }

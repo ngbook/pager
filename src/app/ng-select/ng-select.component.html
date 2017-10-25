@@ -3,17 +3,18 @@
         [styles]="styles" [style.width.px]="width"
         [style.minWidth.px]="minWidth"
         [style.height.px]="height"
-        (click)="toggleOpts()">
+        (click)="toggleOpts($event)">
         <span class="txt">
             {{displayName || default}}
         </span>
         <i class="iconfont icon-up" *ngIf="showOpts"
-            (click)="toggleOpts()"></i>
+            (click)="toggleOpts($event)"></i>
         <i class="iconfont icon-down" *ngIf="!showOpts"
-            (click)="toggleOpts()"></i>
+            (click)="toggleOpts($event)"></i>
     </ng-button>
     <div class="choices" *ngIf="showOpts">
-        <ul class="items" [style.min-width.px]="minWidth">
+        <ul class="items" [style.min-height.px]="popHeight"
+            [style.min-width.px]="minWidth">
             <li class="item"
                 *ngFor="let opt of dataSrc;trackBy:optTrack"
                 [class.active]="selected===opt.value"

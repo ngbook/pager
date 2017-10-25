@@ -29,7 +29,7 @@ export class PageData {
     public allPageNos: number[] = []; // 从1开始，所有页码（选择框用）
 
     public set pageSize(pageSize) {
-        // console.log('set pageSize', pageSize);
+        console.log('set pageSize', pageSize);
         if (this._pageSize === pageSize) {
             return;
         }
@@ -88,7 +88,7 @@ export class PageData {
     private listChange: EventEmitter<any>;
 
     // private cache = new PageCache(); // 用于做缓存控制
-    public lacks: DataSpan; // 当前页面还需要加载的数据
+    // public lacks: DataSpan; // 当前页面还需要加载的数据
     private _pageSize = DEFAULT_PAGE_SIZE;
     private _curPage = 0;
     private _total = 0;
@@ -111,10 +111,10 @@ export class PageData {
         this.detectChanges();
     }
     public init() {
-        this.lacks = {
-            start: 0,
-            end: this.end
-        };
+        // this.lacks = {
+        //     start: 0,
+        //     end: this.end
+        // };
         if (this.autoStart) {
             this.listChanged();
         }
@@ -157,7 +157,10 @@ export class PageData {
         if (this.listChange) {
             // let data = this.getList();
             this.listChange.emit({
-                lacks: this.lacks,
+                lacks: {
+                    start: this.start,
+                    end: this.end,
+                },
                 // data,
             });
         }
@@ -209,7 +212,7 @@ export class PageData {
         this.allPageNos = [];
         this.pageNos = [];
         // this.list = [];
-        this.lacks = null;
+        // this.lacks = null;
         // this.cache.reset();
     }
     // public addToList(rows, start?: number) {
@@ -391,7 +394,6 @@ export class PageData {
     // }
     // 更新总页数，及页码选择框的数据
     private updatePageCount() {
-        // debugger
         let totalPage = Math.ceil(1.0 * this._total / this._pageSize);
         if (totalPage === this.totalPage) {
             return false;
