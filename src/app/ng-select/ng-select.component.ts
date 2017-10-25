@@ -130,49 +130,6 @@ export class NgSelectComponent implements OnInit, OnDestroy {
         return item.value;
     }
 
-    // @Input()
-    // public maxHeight: number | string = 200;
-    // @Input()
-    // public useEffect = true;
-    // @Input()
-    // public iconCls = 'icon-jui-down2';
-
-    // @Input()
-    // public default: string;
-    // @Input()
-    // public _displayName: string;
-    // @Input()
-    // public height: number = 30;
-    // @Input()
-    // public width: number;
-    // @Input()
-    // public minWidth: number;
-    // public ngOnInit() {
-    //     this._displayName = this.displayName;
-    //     if (this._dataSrc) {
-    //         if ( this._selected ) {
-    //             let len = this._dataSrc.length;
-    //             for ( let i = 0; i < len; i ++ ) {
-    //                 let item = this._dataSrc[i];
-    //                 if ( item.value === this._selected ) {
-    //                     if (!this.displayName && !this.default) {
-    //                         this._displayName = this.formatName(item.name);
-    //                     }
-    //                     this.selectedItem = item;
-    //                     break;
-    //                 }
-    //             }
-    //         } else {
-    //             if ( this._dataSrc.length > 0 ) {
-    //                 if (!this.displayName && !this.default) {
-    //                     this._displayName = this.formatName(this._dataSrc[0].name) || '-选择-';
-    //                 }
-    //                 this._selected = this._dataSrc[0].value || '';
-    //             }
-    //         }
-    //     }
-    // }
-
     private simplyFormatDataSrc(data) {
         if (!data) {
             return null;

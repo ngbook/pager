@@ -39,9 +39,6 @@ export class PageData {
         if (this.updatePageCount()) {
             this.updatePageNos();
         }
-        // this.lacks = this.cache.checkCache(
-        //     this.start, this.end, this.leastFetch);
-        // this.updateList(); // 这里有detectChanges
         this.detectChanges();
     }
     public get pageSize() {
@@ -54,8 +51,6 @@ export class PageData {
         this.start = curPage * this._pageSize;
         this.end = this.checkEnd(this.start + this._pageSize);
         this._curPage = curPage;
-        // this.lacks = this.cache.checkCache(
-        //     this.start, this.end, this.leastFetch);
         this.listChanged();
         this.updatePageNos();
         this.detectChanges();
@@ -75,7 +70,6 @@ export class PageData {
         if (this.end > total) {
             this.end = total;
         }
-        // this.cache.setTotal(total);
         if (this.updatePageCount()) {
             this.updatePageNos(); // 自带detectChanges
         } else {
@@ -87,18 +81,10 @@ export class PageData {
     }
     private listChange: EventEmitter<any>;
 
-    // private cache = new PageCache(); // 用于做缓存控制
-    // public lacks: DataSpan; // 当前页面还需要加载的数据
     private _pageSize = DEFAULT_PAGE_SIZE;
     private _curPage = 0;
     private _total = 0;
     private changeDetectionRef: ChangeDetectorRef;
-    // private pageChange: EventEmitter<any>;
-    // private pageSizeChange: EventEmitter<any>;
-    // private leastFetch = Math.ceil(
-    //     LEAST_FETCHING_PERCENT * this._pageSize);
-    // private deleting: number[] = [];
-    // private realEnd: number; // 多次删除时，用于辅助判断是否镂空的情况
 
     constructor( option? ) {
         if (option) {
@@ -111,10 +97,6 @@ export class PageData {
         this.detectChanges();
     }
     public init() {
-        // this.lacks = {
-        //     start: 0,
-        //     end: this.end
-        // };
         if (this.autoStart) {
             this.listChanged();
         }
@@ -155,7 +137,6 @@ export class PageData {
     }
     public listChanged() {
         if (this.listChange) {
-            // let data = this.getList();
             this.listChange.emit({
                 lacks: {
                     start: this.start,
@@ -164,11 +145,6 @@ export class PageData {
                 // data,
             });
         }
-        // 当this.lacks为空时，此时不需要网络请求
-        // if (!this.lacks && this.cache.hasData) { // 需要使用内置数据容器时触发
-        //     this.updateList();
-        //     this.detectChanges();
-        // }
     }
 
     public isLastPage(): boolean {
@@ -201,9 +177,6 @@ export class PageData {
     public setListChanger(listChange: EventEmitter<any>) {
         this.listChange = listChange;
     }
-    // public hasData() {
-    //     return this.cache.hasData;
-    // }
     public reset() {
         this._curPage = this._total = 0;
         this.start = this.end = 0;
@@ -211,187 +184,7 @@ export class PageData {
         this.hasTotalInited = false;
         this.allPageNos = [];
         this.pageNos = [];
-        // this.list = [];
-        // this.lacks = null;
-        // this.cache.reset();
     }
-    // public addToList(rows, start?: number) {
-    //     // console.log(rows, start, this.cache.getList());
-    //     if (!start) {
-    //         start = 0;
-    //     }
-    //     let isFirstAdd = false; // 是不是第一次添加
-    //     let list = this.cache.getList();
-    //     if (!list || list.length <= 0) {
-    //         isFirstAdd = true;
-    //         if (this._total === 0 && this.end === 0) {
-    //             this.end = this._pageSize; // 临时设置，让list至少有数据
-    //         }
-    //     }
-    //     this.cache.addToList(rows, start);
-    //     if (!isFirstAdd && (this.end <= start ||
-    //         this.start >= start + rows.length)) { // 当前页没受影响
-    //         // console.log('skipped..');
-    //         // pass
-    //     } else {
-    //         this.realEnd = this.end;
-    //         this.updateList();
-    //     }
-    //     // console.log(this.list);
-    // }
-    // public prepend(arr: any[]) {
-    //     if (!arr || arr.length <= 0) {
-    //         return;
-    //     }
-    //     this.cache.prepend(arr);
-    //     let isFirstPage = this._curPage === 0;
-    //     this.total = this._total + arr.length;
-    //     // 如果需要填补数据
-    //     if (this.cache.hasData && this.delAware) {
-    //         if (isFirstPage) { // 在第一页才更新
-    //             // 如果第一页没有填满
-    //             if (this.end % this._pageSize !== 0) {
-    //                 this.end = this._pageSize;
-    //             }
-    //             this.updateList();
-    //         }
-    //     }
-    // }
-    // public append(arr: any[]) {
-    //     if (!arr || arr.length <= 0) {
-    //         return;
-    //     }
-    //     this.cache.append(arr);
-    //     let isEmpty = !this._total;
-    //     let isLastPage = this.isLastPage();
-    //     this.total = this._total + arr.length;
-    //     // 如果需要填补数据
-    //     if (this.cache.hasData && this.delAware) {
-    //         if (isLastPage) { // 在最后一页
-    //             // 如果最后一页没有填满
-    //             if (this.end % this._pageSize !== 0
-    //                 || isEmpty) {
-    //                 this.end = this.start + this._pageSize;
-    //                 this.updateList();
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public delFromList(opt) {
-    //     // console.log('deleting...', this.end);
-    //     // 如果用到了组件的缓存机制
-    //     if (this.cache.hasData) {
-    //         // console.log('deleting', opt);
-    //         let result: any = this.cache.delFromList(opt);
-    //         let index = result.index;
-    //         if (index < 0) {
-    //             return; // 没删除成功
-    //         }
-    //         // this.updatePageCount();
-    //         let delData = result.data;
-    //         let delCnt = result.data.length;
-    //         this._total -= delCnt;
-    //         if (this.delAware) { // 需要尽量帮用户维持一整页满数据
-    //             let end = this.end;
-    //             // let start = this.start;
-    //             if (delData && delData.length > 0) {
-    //                 end -= delCnt; // end要往前减
-    //                 if (!this.realEnd) {
-    //                     this.realEnd = this.end - delCnt;
-    //                 } else {
-    //                     this.realEnd -= delCnt;
-    //                 }
-    //                 // this.updateList();
-    //             }
-    //             this.deleting.push(index);
-    //             let item: any;
-    //             let list = this.cache.getList();
-    //             if (this.isLastPage()) { // 最后一页，直接删除
-    //                 this.end -= delCnt;
-    //                 console.log('end: ', this.end);
-    //                 if (this.list.length === 0) { // 最后一条
-    //                     this.goPrevPage();
-    //                 }
-    //                 this.updateList();
-    //                 // this.detectChanges();
-    //             } else { // 不是最后一页，则往后取
-    //                 item = list[end]; // end不用再加1
-    //                 if (!this.cache.isExist(end)) {
-    //                     // console.log(end, this.end, this.realEnd);
-    //                     // this.realEnd = end;
-    //                     let start = end - 1;
-    //                     if (end !== this.realEnd // 用户有快删的行为
-    //                         || end === this._total) { // 或者本次是最后一次加载了
-    //                         // console.log('用户有暴力倾向');
-    //                         // 暴力从头取，而且依然多取一页，让用户随便删
-    //                         start = this.start;
-    //                     }
-    //                     // 多取一页，节省请求
-    //                     end = this.checkEnd(this.end + this._pageSize);
-    //                     // 后面再没请求了，直接全部重取，
-    //                     // 这是为了避免快速删除的情况下，后面再没请求修复数据
-    //                     if (end === this._total) {
-    //                         start = this.start;
-    //                     }
-    //                     this.lacks = {
-    //                         start, end
-    //                     };
-    //                     // console.log(this.lacks);
-    //                     // this.end -= delCnt;
-    //                     this.listChanged(); // 需要加载，但暂不需要更新list
-    //                 } else {
-    //                     this.updateList();
-    //                     this.detectChanges();
-    //                 }
-    //             }
-    //         } else { // 不需要帮用户补充数据
-    //             if (delData && delData.length > 0) {
-    //                 this.end -= delCnt; // end要往前减
-    //                 this.updateList();
-    //             }
-    //             // 如果删除的这条是当前页中的最后一条，则要切换页面
-    //             if (this.list.length === 0) { // 最后一条
-    //                 if (this.isLastPage()) { // 最后一页就往前进
-    //                     // this.curPage --;
-    //                     this.goPrevPage();
-    //                 } else { // 否则就往下一页
-    //                     this.end = this.checkEnd(
-    //                         this.start + this._pageSize);
-    //                     this.lacks = this.cache.checkCache(
-    //                         this.start, this.end, this.leastFetch);
-    //                     // console.log(this.lacks);
-    //                     this.listChanged();
-    //                 }
-    //             }
-    //         }
-    //         // 每次都检查
-    //         if (this.updatePageCount()) {
-    //             this.updatePageNos();
-    //         }
-    //         // this.updateList();
-    //     }
-    // }
-    // 获取特定的范围的数据，这里不校验是否为空
-    // public getList(startEnd?: DataSpan) { // 没指定则默认当前页
-    //     if (!startEnd) {
-    //         startEnd = {
-    //             start: this.start,
-    //             end: this.end,
-    //         };
-    //     }
-    //     return this.cache.getListOf(startEnd);
-    // }
-
-    // private updateList() {
-    //     let list = this.getList();
-    //     // let len = list.length;
-    //     // if (len > 0) {
-    //     let len = this.list.length;
-    //     this.list.splice(0, len, ...list);
-    //     this.detectChanges();
-    //     // }
-    // }
     // 更新总页数，及页码选择框的数据
     private updatePageCount() {
         let totalPage = Math.ceil(1.0 * this._total / this._pageSize);
@@ -417,10 +210,8 @@ export class PageData {
         return end;
     }
     private detectChanges() {
-        // console.log('detect changes');
         if (this.changeDetectionRef) {
             this.changeDetectionRef.markForCheck();
-            // this.changeDetectionRef.detectChanges();
         }
     }
 

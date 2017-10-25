@@ -68,12 +68,10 @@ export class NgPagerComponent implements OnInit {
         }
         this.page.goto(pageNo);
 
-        // this.pageChange.emit(this.page.curPage);
         this.updatePageNos();
     }
     public onPageNoChange(opt) {
         this.page.curPage = opt.value - 1;
-        // this.pageChange.emit(this.page.curPage);
         this.updatePageNos();
     }
     public onSizeChange() {
@@ -81,11 +79,8 @@ export class NgPagerComponent implements OnInit {
             this.page.goFirstPage();
         } else {
             this.page.listChanged();
-            // this.listChange.emit(this.page.lacks);
         }
         this.updatePageNos();
-
-        // this.pageSizeChange.emit(this.page.pageSize);
     }
     public goFirstPage() {
         this.page.goFirstPage();
@@ -97,7 +92,6 @@ export class NgPagerComponent implements OnInit {
         this.page.goPrevPage();
     }
     public goNextPage() {
-        // this.page.curPage ++;
         this.page.goNextPage();
     }
 
