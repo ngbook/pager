@@ -26,9 +26,7 @@ export class AppComponent implements OnInit {
     showLoading = false;
 
     constructor(private friendService: GetFriendsService) {}
-    ngOnInit() {
-        this.page.total = 100;
-    }
+    ngOnInit() { }
     optChanged(opt) {
         console.log(opt);
     }
@@ -52,7 +50,8 @@ export class AppComponent implements OnInit {
                     console.log(body);
                     // 如果返回的数据格式跟People接口或类的定义有出入，
                     //      则这里要做一次数据的格式化
-                    this.dataList = body;
+                    this.dataList = body.list;
+                    this.page.total = body.total;
                 }
             });
         }
