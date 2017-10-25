@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
     page = new PageData();
     page2 = new PageData();
     dataList: People[];
+    showLoading = false;
 
     constructor(private friendService: GetFriendsService) {}
     ngOnInit() {
@@ -36,12 +37,15 @@ export class AppComponent implements OnInit {
     }
 
     pageChanged(data) {
+        this.showLoading = true;
         const lacks = data && data.lacks;
         console.log(lacks);
         if (lacks) {
             this.friendService.request({
                 start: lacks.start,
                 pageSize: lacks.end - lacks.start
+            }).finally(() => {
+                this.showLoading = false;
             }).subscribe((rsp) => {
                 const body  = rsp && rsp.body && rsp.body.data;
                 if (body) {

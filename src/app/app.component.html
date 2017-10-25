@@ -50,6 +50,9 @@
             *ngIf="!dataList || dataList.length === 0">
             数据加载中...
         </div>
+        <div class="loading" *ngIf="showLoading && dataList">
+            <p class="desc">数据加载中...</p>
+        </div>
     </div>
     <div class="pager-wrap">
         <ng-pager [page]="page" (listChange)="pageChanged($event)"></ng-pager>
