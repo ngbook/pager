@@ -4,17 +4,18 @@
     }
     ng-button {
         display: inline-block;
-        .ng-button {
-            background: transparent;
+        ::ng-deep .ng-button { // 定义button的样式
+            padding-left: 10px;
+            padding-right: 28px;
         }
         .txt {
             padding: 0 5px;
         }
         .iconfont {
             font-size: 12px;
-            float: right;
             color: #999;
-            margin-right: 5px;
+            margin-right: -18px;
+            float: right;
         }
     }
     .choices {
@@ -29,9 +30,10 @@
             border-radius: 4px;
             display: inline-block;
             border: 1px #ccc solid;
+            box-shadow: -2px 3px 10px #ccc;
             z-index: 999;
             font-size: 12px;
-            min-width: 60px;
+            min-width: 100%;
             max-height: 140px;
             overflow: auto;
             li.item {
@@ -41,10 +43,9 @@
                 line-height: 20px;
                 text-align: center;
                 word-break: keep-all;
-                &:hover, &.active {
-                    color: #108ee9;
-                    border-color: #108ee9;
-                    font-weight: 600;
+                &.active {
+                    font-weight: 900;
+                    background-color: rgba(16, 142, 233, .1);
                 }
                 &:hover {
                     background-color: rgba(16, 142, 233, .5);

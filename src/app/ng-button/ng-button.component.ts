@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+type STYLE_TYPE = {[key: string]: number | string};
+
 @Component({
   selector: 'ng-button',
   templateUrl: './ng-button.component.html',
@@ -8,9 +10,27 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class NgButtonComponent implements OnInit {
     @Input()
-    styles = '';
+    set styles(data: STYLE_TYPE) {
+        if (!data) {
+            return;
+        }
+        this._styles = {...data, ...this._styles};
+    }
+    @Input()
+    width: number;
+    @Input()
+    height: number;
+    @Input()
+    minWidth: number;
     @Input()
     disabled = false;
+
+    _styles: STYLE_TYPE = {
+        'min-width.px': 50,
+        'text-align': 'center',
+        background: '#fff',
+        padding: 0,
+    };
 
     constructor() { }
 

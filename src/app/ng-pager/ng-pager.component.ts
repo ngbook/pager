@@ -12,7 +12,6 @@ import { PageData } from './ng-pager.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgPagerComponent implements OnInit {
-    // @ViewChildren
 
     @Input()
     public page: PageData;

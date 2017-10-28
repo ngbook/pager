@@ -13,7 +13,7 @@
                 <label class="desc" *ngIf="showJumpTool">
                     转到:
                 </label>
-                <ng-select [selected]="page.curPage + 1" 
+                <ng-select [ngModel]="page.curPage + 1" 
                     (change)="onPageNoChange($event)"
                     [dataSrc]="page.allPageNos"
                     [height]="height">
@@ -22,7 +22,7 @@
             </div>
             <div class="addition-wrap" *ngIf="showPageTool">
                 <label class="desc">每页:</label>
-                <ng-select [(selected)]="page.pageSize"
+                <ng-select [(ngModel)]="page.pageSize"
                     (change)="onSizeChange($event)"
                     [dataSrc]="page.pageSizeOpts"
                     [height]="height">

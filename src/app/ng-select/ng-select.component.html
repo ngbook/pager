@@ -1,25 +1,21 @@
 <div class="ng-select" (click)="stopBubble($event)">
-    <ng-button [class.disabled.px]="disabled"
-        [styles]="styles" [style.width.px]="width"
-        [style.minWidth.px]="minWidth"
-        [style.height.px]="height"
-        (click)="toggleOpts($event)">
-        <span class="txt">
-            {{displayName || default}}
-        </span>
-        <i class="iconfont icon-up" *ngIf="showOpts"></i>
-        <i class="iconfont icon-down" *ngIf="!showOpts"></i>
+    <ng-button (click)="toggleOpts($event)"
+        [class.disabled.px]="disabled"
+        [minWidth]="width"
+        [height]="height"
+        (mouseenter)="enterButton()"
+        (mouseleave)="hideOpts()">
+        <span class="txt">{{displayName}}</span>
+        <i class="iconfont icon-{{toShowOpts?'up':'down'}}"></i>
     </ng-button>
-    <div class="choices" *ngIf="showOpts">
+    <div class="choices" [hidden]="!toShowOpts"
+        (mouseleave)="hideOpts()" (mouseenter)="enterButton()">
         <ul class="items" [style.min-height.px]="popHeight"
-            [style.min-width.px]="minWidth">
-            <li class="item"
-                *ngFor="let opt of dataSrc;trackBy:optTrack"
+            [style.min-width.px]="width">
+            <li class="item" *ngFor="let opt of dataSrc"
                 [class.active]="selected===opt.value"
                 (click)="chooseItem(opt)"
-                [style.color]="opt.color">
-                {{opt.name}}
-            </li>
+                [style.color]="opt.color">{{opt.name}}</li>
         </ul>
     </div>
 </div>

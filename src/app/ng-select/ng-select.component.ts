@@ -1,47 +1,51 @@
 import {
     Component, Input, HostListener,
     OnInit, OnDestroy, Output, EventEmitter,
-    ChangeDetectorRef,
+    ChangeDetectorRef, forwardRef,
 } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 import { DocClickService } from './document-event.service';
 
-@Component({
-  selector: 'ng-select',
-  templateUrl: './ng-select.component.html',
-  styleUrls: ['./ng-select.component.scss'],
-})
-export class NgSelectComponent implements OnInit, OnDestroy {
-    @Input()
-    public default;
-    @Input()
-    public disabled = false;
-    @Input()
-    public srcKey;
-    @Input()
-    public width;
-    @Input()
-    public height;
-    @Input()
-    public minWidth;
-    @Input()
-    public maxWordCnt: number;
-    @Input()
-    public popHeight;
+const noop = () => { };
 
+@Component({
+    selector: 'ng-select',
+    templateUrl: './ng-select.component.html',
+    styleUrls: ['./ng-select.component.scss'],
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NgSelectComponent),
+        multi: true
+    }],
+})
+export class NgSelectComponent implements OnInit,
+    OnDestroy, ControlValueAccessor {
+    @Input() defaultTxt;
+    @Input() disabled = false;
+    @Input() width: number;
+    @Input() height: number;
+    @Input() maxWordCnt: number;
+    @Input() popHeight: number;
+    @Input() nameKey: string;
+    @Input() valueKey: string;
+    @Input() autoHide = false; // 是否监听鼠标划出事件来隐藏选择框
     @Input('dataSrc')
     public set data(data) {
         if (!data) {
             return;
         }
-        const list = this.dataSrc = this.simplyFormatDataSrc(data);
+        const list = this.dataSrc = this.formatDataSrc(data);
+        this.initDisplayName();
         // 如果没有默认值，则把第一个当默认值
         if (!this.displayName && list && list.length > 0) {
-            this.displayName = list[0].name;
+            const defaultItem = list[0];
+            this.displayName = defaultItem.name;
+            this._selected = defaultItem;
+            this.onChangeCallback(defaultItem.value);
         }
     }
-    @Input()
     public set selected(key) {
         if (!key || !this.dataSrc) {
             return;
@@ -57,37 +61,30 @@ export class NgSelectComponent implements OnInit, OnDestroy {
     public get selected() {
         return this._selected && this._selected.value || null;
     }
-    @Output() // 跟上面对应，给双向绑定用
-    public selectedChange: EventEmitter<any> = new EventEmitter();
-
     @Output()
     change: EventEmitter<any> = new EventEmitter();
 
     public displayName: string;
-    public showOpts = false;
-    // 定制button的样式以适应select
-    styles = {
-        'background': '#fff',
-        'min-width.px': 50,
-        'padding': 0,
-        'text-align': 'center',
-    };
-    dataSrc: any[];
-    private _selected: any;
+    public toShowOpts = false;
+
+    public dataSrc: any[];
+
+    // Placeholders for the callbacks which are later provided
+    // by the Control Value Accessor
+    private onTouchedCallback: () => void = noop;
+    private onChangeCallback: (_: any) => void = noop;
+
     private subscriber: Subscription;
+    private _selected: any; // 选中项，{name: string, value: any}
+    private mouseOutTimer: any;
 
     constructor(private docClickService: DocClickService,
         private changeDetectionRef: ChangeDetectorRef) {
     }
     ngOnInit() {
-        if (!this.minWidth && this.width) {
-            this.minWidth = this.width;
-        }
-        if (this.default) {
-            this.displayName = this.formatName(this.default);
-        }
+        this.initDisplayName();
         this.subscriber = this.docClickService.listen((event) => {
-            this.showOpts = false;
+            this.toShowOpts = false;
             // 为了保证这个select组件在各种变化检测策略中都能正常工作，
             // 这里手动添加了变化检测的触发机制
             this.changeDetectionRef.detectChanges();
@@ -98,64 +95,89 @@ export class NgSelectComponent implements OnInit, OnDestroy {
             this.subscriber.unsubscribe();
         }
     }
-    stopBubble(event: MouseEvent) {
+    public stopBubble(event: MouseEvent) {
         event.stopPropagation();
     }
 
-    toggleOpts(event) {
-        // console.log('toggle');
+    public toggleOpts(event) {
         this.stopBubble(event);
-        this.showOpts = !this.showOpts;
+        this.toShowOpts = !this.toShowOpts;
     }
-    chooseItem(opt) {
+    public chooseItem(opt) {
         if (this._selected) {
             if (opt.value === this._selected.value) {
+                this.toShowOpts = false;
                 return;
             }
         }
-        this._selected = {
-            value: opt.value,
-            name: opt.name,
-        };
+        this._selected = opt;
         this.displayName = this.formatName(opt.name);
-        // console.log(this.showOpts, opt);
-        setTimeout(() => {
-            this.showOpts = false;
-        });
-        // 先selectedChange，再change
-        this.selectedChange.emit(opt.value);
+        this.toShowOpts = false;
+        // 触发事件输出
         this.change.emit(opt);
-    }
-    optTrack(index, item) {
-        return item.value;
+        this.onChangeCallback(opt.value);
     }
 
-    private simplyFormatDataSrc(data) {
+    // 自定义blur，触发组件状态变成touched，在本示例中不是必须
+    onBlur() {
+        this.onTouchedCallback();
+    }
+    // ControlValueAccessor接口定义
+    // 用于外部绑定的属性变化时，触发本组件内部相关数据更新
+    writeValue(value: any) {
+        if (!this._selected || value !== this._selected.value) {
+            this.selected = value;
+        }
+    }
+    // ControlValueAccessor接口定义
+    // 本方法为取得emitter，用于向外反馈内部相关属性的变化
+    registerOnChange(fn: any) {
+        this.onChangeCallback = fn;
+    }
+    // ControlValueAccessor接口定义
+    // 本方法为取得touched状态变化的触发器，在本示例中不是必须
+    registerOnTouched(fn: any) {
+        this.onTouchedCallback = fn;
+    }
+    public hideOpts() {
+        if (!this.autoHide) {
+            return;
+        }
+        this.mouseOutTimer = setTimeout(() => {
+            this.toShowOpts = false;
+            this.changeDetectionRef.detectChanges();
+        }, 100);
+    }
+    public enterButton() {
+        if (!this.autoHide) {
+            return;
+        }
+        if (this.mouseOutTimer) {
+            clearTimeout(this.mouseOutTimer);
+            this.mouseOutTimer = null;
+        }
+    }
+
+    private initDisplayName() {
+        if (this.defaultTxt && !this.displayName) {
+            this.displayName = this.formatName(this.defaultTxt);
+        }
+    }
+    private formatDataSrc(data) {
         if (!data) {
             return null;
         }
-        let key = this.srcKey;
+        const nameKey = this.nameKey;
+        const valueKey = this.valueKey;
         const list = [];
         data.forEach( (item) => {
             if (!item) {
                 return;
             }
-            let value = item;
-            let name = item.name || item.label || item[key] || item;
-            if (key) {
-                value = item[key];
-            } else {
-                if (item.id !== undefined) {
-                    value = item.id;
-                } else if (item.value !== undefined) {
-                    value = item.value;
-                } else {
-                    value = name;
-                }
-            }
+            const name = item[nameKey] || item.name || item.label || item;
+            const value = item[valueKey] || item.value || item.id || item;
             const result = {
-                value,
-                name,
+                value, name,
                 color: item.color
             };
             if (typeof item === 'object') {

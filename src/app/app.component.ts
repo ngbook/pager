@@ -20,13 +20,23 @@ export class AppComponent implements OnInit {
         { value: 7, name: '选项七非常非常非常非常长' },
     ];
     testChoices2 = ['选项一', '选项二', '选项三'];
+    testChoices3 = [
+        { value: 1, name: '选项一', color: '#0f0' },
+        { value: 2, name: '选项二', color: 'pink' },
+        { value: 3, name: '选项三', color: '#00f' },
+    ];
     page = new PageData();
     page2 = new PageData();
     dataList: People[];
     showLoading = false;
+    selected = 5;
 
     constructor(private friendService: GetFriendsService) {}
-    ngOnInit() { }
+    ngOnInit() {
+        setTimeout(() => {
+            this.selected = 2;
+        }, 8000);
+    }
     optChanged(opt) {
         console.log(opt);
     }
@@ -35,7 +45,11 @@ export class AppComponent implements OnInit {
     }
 
     pageChanged(data) {
-        this.showLoading = true;
+        if (this.dataList) {
+            // 有数据的时候再进行刷新，避免这个错误：
+            // ExpressionChangedAfterItHasBeenCheckedError
+            this.showLoading = true;
+        }
         const lacks = data && data.lacks;
         console.log(lacks);
         if (lacks) {

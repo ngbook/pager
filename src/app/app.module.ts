@@ -4,6 +4,7 @@ import {
     ErrorHandler
 } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { NgPagerModule } from './ng-pager';
@@ -19,6 +20,7 @@ import { GlobalErrorHandler } from './services/global-error.event';
     imports: [
         BrowserModule,
         HttpModule,
+        FormsModule,
         NgSelectModule.forRoot(),
         NgButtonModule,
         NgPagerModule,

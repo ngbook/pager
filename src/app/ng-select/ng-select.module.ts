@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { NgSelectComponent } from './ng-select.component';
 import { NgButtonModule } from '../ng-button';
@@ -11,6 +12,7 @@ import { DocClickService } from './document-event.service';
     ],
     imports: [
         CommonModule,
+        FormsModule,
         NgButtonModule,
     ],
     exports: [

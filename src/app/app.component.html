@@ -7,11 +7,17 @@
 <div class="select-demo">
     <h3>select组件Demo</h3>
 </div>
-<ng-select default="请选择"
+<select>
+    <option *ngFor="let opt of testChoices2">{{opt}}</option>
+</select>
+<ng-select defaultTxt="请选择"
     [dataSrc]="testChoices1"
     maxWordCnt="5"
+    width="100"
     (change)="optChanged(opt)"></ng-select>
 <ng-select [dataSrc]="testChoices2"></ng-select>
+<ng-select [dataSrc]="testChoices3" [(ngModel)]="selected"></ng-select>
+<p>选中的数据：{{selected}}</p>
 
 <div class="pager-demo">
     <h3>分页组件</h3>

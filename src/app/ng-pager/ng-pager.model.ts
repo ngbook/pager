@@ -29,7 +29,7 @@ export class PageData {
     public allPageNos: number[] = []; // 从1开始，所有页码（选择框用）
 
     public set pageSize(pageSize) {
-        console.log('set pageSize', pageSize);
+        console.log('set pageSize', this._pageSize, pageSize);
         if (this._pageSize === pageSize) {
             return;
         }
@@ -211,7 +211,7 @@ export class PageData {
     }
     private detectChanges() {
         if (this.changeDetectionRef) {
-            this.changeDetectionRef.markForCheck();
+            this.changeDetectionRef.detectChanges();
         }
     }
 
