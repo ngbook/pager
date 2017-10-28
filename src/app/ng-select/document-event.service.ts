@@ -7,7 +7,7 @@ import 'rxjs/add/observable/interval';
 
 @Injectable()
 export class DocClickService {
-    docClickObserver: Observable<MouseEvent>;
+    private docClickObserver: Observable<MouseEvent>;
 
     constructor(@Inject(DOCUMENT) document: any) {
         this.docClickObserver = Observable

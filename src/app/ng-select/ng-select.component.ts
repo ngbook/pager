@@ -8,8 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { DocClickService } from './document-event.service';
 
-const noop = () => { };
-
 @Component({
     selector: 'ng-select',
     templateUrl: './ng-select.component.html',
@@ -43,7 +41,7 @@ export class NgSelectComponent implements OnInit,
             const defaultItem = list[0];
             this.displayName = defaultItem.name;
             this._selected = defaultItem;
-            this.onChangeCallback(defaultItem.value);
+            this.emitChangeCallback(defaultItem.value);
         }
     }
     public set selected(key) {
@@ -69,19 +67,18 @@ export class NgSelectComponent implements OnInit,
 
     public dataSrc: any[];
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
-
     private subscriber: Subscription;
     private _selected: any; // 选中项，{name: string, value: any}
     private mouseOutTimer: any;
 
+    // 定义两个空的回调，之后在ControlValueAccessor的函数中会赋值
+    private setTouchedCallback: any;
+    private emitChangeCallback: any;
+
     constructor(private docClickService: DocClickService,
         private changeDetectionRef: ChangeDetectorRef) {
     }
-    ngOnInit() {
+    public ngOnInit() {
         this.initDisplayName();
         this.subscriber = this.docClickService.listen((event) => {
             this.toShowOpts = false;
@@ -90,7 +87,7 @@ export class NgSelectComponent implements OnInit,
             this.changeDetectionRef.detectChanges();
         });
     }
-    ngOnDestroy() {
+    public ngOnDestroy() {
         if (this.subscriber) {
             this.subscriber.unsubscribe();
         }
@@ -115,29 +112,32 @@ export class NgSelectComponent implements OnInit,
         this.toShowOpts = false;
         // 触发事件输出
         this.change.emit(opt);
-        this.onChangeCallback(opt.value);
+        // 反向设置外部绑定的属性或变量
+        this.emitChangeCallback(opt.value);
+        // 同时标记成touched状态
+        this.setTouchedCallback();
     }
 
     // 自定义blur，触发组件状态变成touched，在本示例中不是必须
-    onBlur() {
-        this.onTouchedCallback();
+    public onBlur() {
+        this.setTouchedCallback();
     }
-    // ControlValueAccessor接口定义
+    // ControlValueAccessor接口定义的
     // 用于外部绑定的属性变化时，触发本组件内部相关数据更新
-    writeValue(value: any) {
+    public writeValue(value: any) {
         if (!this._selected || value !== this._selected.value) {
             this.selected = value;
         }
     }
-    // ControlValueAccessor接口定义
+    // ControlValueAccessor接口定义的
     // 本方法为取得emitter，用于向外反馈内部相关属性的变化
-    registerOnChange(fn: any) {
-        this.onChangeCallback = fn;
+    public registerOnChange(fn: any) {
+        this.emitChangeCallback = fn;
     }
-    // ControlValueAccessor接口定义
+    // ControlValueAccessor接口定义的
     // 本方法为取得touched状态变化的触发器，在本示例中不是必须
-    registerOnTouched(fn: any) {
-        this.onTouchedCallback = fn;
+    public registerOnTouched(fn: any) {
+        this.setTouchedCallback = fn;
     }
     public hideOpts() {
         if (!this.autoHide) {
