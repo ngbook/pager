@@ -118,10 +118,6 @@ export class NgSelectComponent implements OnInit,
         this.setTouchedCallback();
     }
 
-    // 自定义blur，触发组件状态变成touched，在本示例中不是必须
-    public onBlur() {
-        this.setTouchedCallback();
-    }
     // ControlValueAccessor接口定义的
     // 用于外部绑定的属性变化时，触发本组件内部相关数据更新
     public writeValue(value: any) {
@@ -135,7 +131,7 @@ export class NgSelectComponent implements OnInit,
         this.emitChangeCallback = fn;
     }
     // ControlValueAccessor接口定义的
-    // 本方法为取得touched状态变化的触发器，在本示例中不是必须
+    // 本方法为取得touched状态变化的触发器
     public registerOnTouched(fn: any) {
         this.setTouchedCallback = fn;
     }
