@@ -9,9 +9,10 @@
         <i class="iconfont icon-{{toShowOpts?'up':'down'}}"></i>
     </ng-button>
     <div class="choices" [hidden]="!toShowOpts"
-        (mouseleave)="hideOpts()" (mouseenter)="enterButton()">
-        <ul class="items" [style.min-height.px]="popHeight"
-            [style.min-width.px]="width">
+        (mouseleave)="hideOpts()" (mouseenter)="enterButton()"
+        [style.top.px]="choicesTop">
+        <ul class="items" [style.max-height.px]="popHeight"
+            [style.min-width.px]="width" #choices>
             <li class="item" *ngFor="let opt of dataSrc"
                 [class.active]="selected===opt.value"
                 (click)="chooseItem(opt)"

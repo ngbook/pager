@@ -2,11 +2,12 @@ import {
     Component, Input, HostListener,
     OnInit, OnDestroy, Output, EventEmitter,
     ChangeDetectorRef, forwardRef,
+    ElementRef, ViewChild,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
-import { DocClickService } from './document-event.service';
+import { DocEventService } from './document-event.service';
 
 @Component({
     selector: 'ng-select',
@@ -20,15 +21,19 @@ import { DocClickService } from './document-event.service';
 })
 export class NgSelectComponent implements OnInit,
     OnDestroy, ControlValueAccessor {
+
+    @ViewChild('choices', {read: ElementRef})
+    choicesWrapper: ElementRef;
+
     @Input() defaultTxt;
     @Input() disabled = false;
-    @Input() width: number;
-    @Input() height: number;
     @Input() maxWordCnt: number;
+    @Input() width: number;
+    @Input() height = 30;
     @Input() popHeight: number;
     @Input() nameKey: string;
     @Input() valueKey: string;
-    @Input() autoHide = false; // 是否监听鼠标划出事件来隐藏选择框
+    @Input() autoHide = true; // 是否监听鼠标划出事件来隐藏选择框
     @Input('dataSrc')
     public set data(data) {
         if (!data) {
@@ -41,7 +46,9 @@ export class NgSelectComponent implements OnInit,
             const defaultItem = list[0];
             this.displayName = defaultItem.name;
             this._selected = defaultItem;
-            this.emitChangeCallback(defaultItem.value);
+            if (this.emitChangeCallback) {
+                this.emitChangeCallback(defaultItem.value);
+            }
         }
     }
     public set selected(key) {
@@ -52,6 +59,7 @@ export class NgSelectComponent implements OnInit,
             if (opt.value === key) {
                 this._selected = opt;
                 this.displayName = this.formatName(opt.name);
+                this.changeDetectionRef.detectChanges();
                 break;
             }
         }
@@ -64,6 +72,7 @@ export class NgSelectComponent implements OnInit,
 
     public displayName: string;
     public toShowOpts = false;
+    public choicesTop = 0;
 
     public dataSrc: any[];
 
@@ -75,12 +84,12 @@ export class NgSelectComponent implements OnInit,
     private setTouchedCallback: any;
     private emitChangeCallback: any;
 
-    constructor(private docClickService: DocClickService,
+    constructor(private docEventService: DocEventService,
         private changeDetectionRef: ChangeDetectorRef) {
     }
     public ngOnInit() {
         this.initDisplayName();
-        this.subscriber = this.docClickService.listen((event) => {
+        this.subscriber = this.docEventService.listen((event) => {
             this.toShowOpts = false;
             // 为了保证这个select组件在各种变化检测策略中都能正常工作，
             // 这里手动添加了变化检测的触发机制
@@ -99,6 +108,11 @@ export class NgSelectComponent implements OnInit,
     public toggleOpts(event) {
         this.stopBubble(event);
         this.toShowOpts = !this.toShowOpts;
+        if (this.toShowOpts) {
+            setTimeout(() => {
+                this.adjustPopPos();
+            });
+        }
     }
     public chooseItem(opt) {
         if (this._selected) {
@@ -110,12 +124,16 @@ export class NgSelectComponent implements OnInit,
         this._selected = opt;
         this.displayName = this.formatName(opt.name);
         this.toShowOpts = false;
-        // 触发事件输出
-        this.change.emit(opt);
         // 反向设置外部绑定的属性或变量
-        this.emitChangeCallback(opt.value);
+        if (this.emitChangeCallback) {
+            this.emitChangeCallback(opt.value);
+        }
         // 同时标记成touched状态
-        this.setTouchedCallback();
+        if (this.setTouchedCallback) {
+            this.setTouchedCallback();
+        }
+        // 最后再触发事件输出
+        this.change.emit(opt);
     }
 
     // ControlValueAccessor接口定义的
@@ -193,6 +211,21 @@ export class NgSelectComponent implements OnInit,
             } else {
                 return name;
             }
+        }
+    }
+    private adjustPopPos() {
+        const dom = this.choicesWrapper.nativeElement;
+        const offsetHeight = dom.offsetHeight;
+        const winSize = this.docEventService.winSize;
+        if (winSize.height < offsetHeight) {
+            // 窗口的高度本来就小于弹出框高度，直接返回，不用往下判断了
+            return;
+        }
+        const offsetTop = dom.getBoundingClientRect().top;
+        if (winSize && offsetHeight
+            && offsetTop + offsetHeight > winSize.height) {
+            this.choicesTop = -(dom.offsetHeight + this.height);
+            this.changeDetectionRef.detectChanges();
         }
     }
 }

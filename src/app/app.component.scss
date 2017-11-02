@@ -1,5 +1,15 @@
 
 $tabItemHeight: 26px;
+.box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 80%;
+    margin: 10px auto;
+    clear: both;
+    p.desc {
+        margin: 5px;
+    }
+}
 table {
     text-align: center;
     th {

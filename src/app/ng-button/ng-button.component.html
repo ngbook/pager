@@ -1,7 +1,4 @@
-<button class="ng-button" [class.disabled]="disabled"
-    [ngStyle]="styles"
-    [style.width.px]="width"
-    [style.height.px]="height"
+<button class="ng-button" [class.disabled]="disabled" [ngStyle]="_styles" [style.width.px]="width" [style.height.px]="height"
     [style.min-width.px]="minWidth">
     <ng-content></ng-content>
 </button>

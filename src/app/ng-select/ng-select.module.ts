@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { NgSelectComponent } from './ng-select.component';
 import { NgButtonModule } from '../ng-button';
-import { DocClickService } from './document-event.service';
+import { DocEventService } from './document-event.service';
 
 @NgModule({
     declarations: [
@@ -19,14 +19,15 @@ import { DocClickService } from './document-event.service';
         NgSelectComponent,
     ],
     providers: [
-        DocClickService
+        { provide: 'WINDOW', useValue: window },
+        DocEventService,
     ],
 })
 export class NgSelectModule {
     public static forRoot() {
         return {
             ngModule: NgSelectModule,
-            providers: [ DocClickService ]
+            providers: [ DocEventService ]
         };
     }
 }

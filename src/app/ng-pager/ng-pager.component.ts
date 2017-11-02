@@ -1,15 +1,15 @@
 import {
     Component, OnInit, Input, Output,
     EventEmitter, ChangeDetectorRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { PageData } from './ng-pager.model';
 
 @Component({
-  selector: 'ng-pager',
-  templateUrl: './ng-pager.component.html',
-  styleUrls: ['./ng-pager.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ng-pager',
+    templateUrl: './ng-pager.component.html',
+    styleUrls: ['./ng-pager.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgPagerComponent implements OnInit {
 
@@ -23,6 +23,10 @@ export class NgPagerComponent implements OnInit {
     @Output()
     public listChange: EventEmitter<any> = new EventEmitter();
 
+    public itemStyles = {
+        padding: 0
+    };
+
     // 是否显示
     @Input()
     public showInfo = true;
@@ -34,22 +38,14 @@ export class NgPagerComponent implements OnInit {
     public showPageTool = true;
 
     @Input()
-    public set type(style) {
-        this._style = style;
-        if (style === 'simple') {
+    public set type(newType) {
+        if (newType === 'simple') {
             this.showInfo = false;
             this.showJumpTool = false;
             this.showTotalPages = false;
             this.showPageTool = false;
         }
     }
-    itemStyles = {
-        'width.px': this.height,
-        'height.px': this.height - 2,
-        padding: 0
-    };
-
-    private _style = 'normal';
 
     constructor(private changeDetectionRef: ChangeDetectorRef) {
         // pass
@@ -61,8 +57,8 @@ export class NgPagerComponent implements OnInit {
 
     // 点击页码
     public selectPage(pageNo: number) {
-        if ( this.page.curPage === pageNo - 1 || pageNo < 1 ||
-            pageNo > this.page.totalPage ) {
+        if (this.page.curPage === pageNo - 1 || pageNo < 1 ||
+            pageNo > this.page.totalPage) {
             return;
         }
         this.page.goto(pageNo);

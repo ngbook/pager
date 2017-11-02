@@ -5,9 +5,9 @@ import { GetFriendsService } from './services/friends.service';
 import { People } from './people.model';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
     testChoices1 = [
@@ -29,13 +29,13 @@ export class AppComponent implements OnInit {
     page2 = new PageData();
     dataList: People[];
     showLoading = false;
-    selected = 5;
+    selected = 3;
 
-    constructor(private friendService: GetFriendsService) {}
+    constructor(private friendService: GetFriendsService) { }
     ngOnInit() {
         setTimeout(() => {
             this.selected = 2;
-        }, 8000);
+        }, 10000);
     }
     optChanged(opt) {
         console.log(opt);
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
             this.showLoading = true;
         }
         const lacks = data && data.lacks;
-        console.log(lacks);
+        // console.log(lacks);
         if (lacks) {
             this.friendService.request({
                 start: lacks.start,
@@ -59,9 +59,9 @@ export class AppComponent implements OnInit {
             }).finally(() => {
                 this.showLoading = false;
             }).subscribe((rsp) => {
-                const body  = rsp && rsp.body && rsp.body.data;
+                const body = rsp && rsp.body && rsp.body.data;
                 if (body) {
-                    console.log(body);
+                    // console.log(body);
                     // 如果返回的数据格式跟People接口或类的定义有出入，
                     //      则这里要做一次数据的格式化
                     this.dataList = body.list;

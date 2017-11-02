@@ -6,21 +6,39 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/interval';
 
 @Injectable()
-export class DocClickService {
+export class DocEventService {
+    public _winSize: {width: number, height: number};
     private docClickObserver: Observable<MouseEvent>;
 
-    constructor(@Inject(DOCUMENT) document: any) {
+    constructor(@Inject(DOCUMENT) private document: any,
+            @Inject('WINDOW') private win: Window) {
         this.docClickObserver = Observable
             .fromEvent<MouseEvent>(document, 'click')
             .debounceTime<MouseEvent>(200); // 延迟200毫秒，多次点击只触发一次
     }
 
-    listen(callback) {
+    get winSize() {
+        if (!this._winSize) {
+            // 初始化window宽高
+            this.initWinSize();
+        }
+        return this._winSize;
+    }
+
+    public listen(callback) {
         if (callback) {
             return this.docClickObserver.subscribe((event) => {
                 callback(event);
             });
         }
         return null;
+    }
+    private initWinSize() {
+        if (this.win) {
+            this._winSize = {
+                width: this.win.innerWidth,
+                height: this.win.innerHeight,
+            };
+        }
     }
 }
