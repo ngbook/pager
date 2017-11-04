@@ -20,13 +20,6 @@ export class NgPagerComponent implements OnInit {
     @Input()
     public align = 'normal'; // normal, left, right
 
-    @Output()
-    public listChange: EventEmitter<any> = new EventEmitter();
-
-    public itemStyles = {
-        padding: 0
-    };
-
     // 是否显示
     @Input()
     public showInfo = true;
@@ -47,55 +40,18 @@ export class NgPagerComponent implements OnInit {
         }
     }
 
+    @Output()
+    public listChange: EventEmitter<any> = new EventEmitter();
+
+    public itemStyles = {
+        padding: 0
+    };
+
     constructor(private changeDetectionRef: ChangeDetectorRef) {
         // pass
     }
 
     public ngOnInit() {
-        this.init();
-    }
-
-    // 点击页码
-    public selectPage(pageNo: number) {
-        if (this.page.curPage === pageNo - 1 || pageNo < 1 ||
-            pageNo > this.page.totalPage) {
-            return;
-        }
-        this.page.goto(pageNo);
-
-        this.updatePageNos();
-    }
-    public onPageNoChange(opt) {
-        this.page.curPage = opt.value - 1;
-        this.updatePageNos();
-    }
-    public onSizeChange() {
-        if (this.page.curPage !== 0) {
-            this.page.goFirstPage();
-        } else {
-            this.page.listChanged();
-        }
-        this.updatePageNos();
-    }
-    public goFirstPage() {
-        this.page.goFirstPage();
-    }
-    public goLastPage() {
-        this.page.goLastPage();
-    }
-    public goPrevPage() {
-        this.page.goPrevPage();
-    }
-    public goNextPage() {
-        this.page.goNextPage();
-    }
-
-    private updatePageNos() {
-        this.page.updatePageNos();
-    }
-
-    // 初始化标签
-    private init() {
         if (!this.page) {
             this.page = new PageData();
         }
@@ -103,6 +59,35 @@ export class NgPagerComponent implements OnInit {
         this.page.setListChanger(this.listChange);
         // 初始化的时候，触发一次
         this.page.init();
+    }
+
+    // 通过页码下拉框修改当前页面
+    public onPageNoChange(opt) {
+        this.page.curPage = opt.value - 1;
+    }
+    // 点击页码
+    public selectPage(pageNo: number) {
+        if (this.page.curPage === pageNo - 1 || pageNo < 1 ||
+            pageNo > this.page.totalPage) {
+            return;
+        }
+        this.page.goto(pageNo);
+    }
+    // 跳到第一页
+    public goFirstPage() {
+        this.page.goFirstPage();
+    }
+    // 跳到最后一页
+    public goLastPage() {
+        this.page.goLastPage();
+    }
+    // 往前跳一页
+    public goPrevPage() {
+        this.page.goPrevPage();
+    }
+    // 往后跳一页
+    public goNextPage() {
+        this.page.goNextPage();
     }
 
 }

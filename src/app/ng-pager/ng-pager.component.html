@@ -1,41 +1,59 @@
-<div class="ng-pager" [style.height.px]="height" *ngIf="this.page.total > 0">
-    <div class="pager-left" [style.line-height.px]="height" [style.float]="align!=='right'?'left': 'right'" *ngIf="showInfo">
+<div class="ng-pager" [style.height.px]="height"
+    *ngIf="this.page.total > 0">
+    <div class="pager-left" [style.line-height.px]="height"
+        [style.float]="align!=='right'?'left': 'right'"
+        *ngIf="showInfo">
         {{page.start + 1}} - {{page.end}}条，共{{page.total}}条
     </div>
-    <div class="pager-right" [style.float]="align!=='left'?'right': 'left'">
+    <div class="pager-right"
+        [style.float]="align!=='left'?'right': 'left'">
         <div class="inner jump">
             <div class="addition-wrap">
-                <label class="desc" *ngIf="showJumpTool">
-                    转到:
-                </label>
-                <ng-select [ngModel]="page.curPage + 1" (change)="onPageNoChange($event)" [dataSrc]="page.allPageNos" [autoHide]="true" [height]="height">
-                </ng-select>页
+                <ng-container *ngIf="showJumpTool">
+                    <label class="desc">转到:</label>
+                    <ng-select [ngModel]="page.curPage + 1"
+                    (change)="onPageNoChange($event)"
+                    [dataSrc]="page.allPageNos" [autoHide]="true"
+                    [height]="height"></ng-select> 页
+                </ng-container>
                 <span *ngIf="showTotalPages">/ 共{{page.totalPage}}页</span>
             </div>
             <div class="addition-wrap" *ngIf="showPageTool">
                 <label class="desc">每页:</label>
-                <ng-select [(ngModel)]="page.pageSize" (change)="onSizeChange($event)" [dataSrc]="page.pageSizeOpts" [autoHide]="true" [height]="height">
+                <ng-select [(ngModel)]="page.pageSize"
+                [dataSrc]="page.pageSizeOpts"
+                [autoHide]="true" [height]="height">
                 </ng-select>条
             </div>
         </div>
         <div class="inner page-nos">
             <ul>
                 <li (click)="goFirstPage()">
-                    <ng-button [styles]="itemStyles" [disabled]="page.curPage===0" [width]="height" [height]="height">«</ng-button>
+                    <ng-button [styles]="itemStyles"
+                    [height]="height" [width]="height"
+                    [disabled]="page.curPage===0">«</ng-button>
                 </li>
                 <li (click)="goPrevPage()">
-                    <ng-button [disabled]="page.curPage===0" [width]="height" [height]="height">‹</ng-button>
+                    <ng-button [height]="height" [width]="height"
+                    [disabled]="page.curPage===0">‹</ng-button>
                 </li>
-                <li (click)="selectPage(index)" *ngFor="let index of page.pageNos">
-                    <ng-button [styles]="itemStyles" [width]="height" [height]="height" [class.primary]="index===page.curPage+1">
+                <li (click)="selectPage(index)"
+                    *ngFor="let index of page.pageNos">
+                    <ng-button [styles]="itemStyles"
+                    [width]="height" [height]="height"
+                    [class.primary]="index===page.curPage+1">
                         {{index}}
                     </ng-button>
                 </li>
                 <li (click)="goNextPage()">
-                    <ng-button [styles]="itemStyles" [disabled]="page.curPage===page.totalPage-1" [width]="height" [height]="height">›</ng-button>
+                    <ng-button [styles]="itemStyles"
+                    [disabled]="page.curPage===page.totalPage-1"
+                    [width]="height" [height]="height">›</ng-button>
                 </li>
                 <li (click)="goLastPage()">
-                    <ng-button [styles]="itemStyles" [disabled]="page.curPage===page.totalPage-1" [width]="height" [height]="height">»</ng-button>
+                    <ng-button [styles]="itemStyles"
+                    [disabled]="page.curPage===page.totalPage-1"
+                    [width]="height" [height]="height">»</ng-button>
                 </li>
             </ul>
         </div>

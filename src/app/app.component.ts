@@ -25,8 +25,9 @@ export class AppComponent implements OnInit {
         { value: 2, name: '选项二', color: 'pink' },
         { value: 3, name: '选项三', color: '#00f' },
     ];
-    page = new PageData();
-    page2 = new PageData();
+    page = new PageData({
+        // autoStart: false // 设置为false时要手动触发，解开下面的page.run()注释即可
+    });
     dataList: People[];
     showLoading = false;
     selected = 3;
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         setTimeout(() => {
             this.selected = 2;
-        }, 10000);
+            // this.page.run();
+        }, 5000);
     }
     optChanged(opt) {
         console.log(opt);
