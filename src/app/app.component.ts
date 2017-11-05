@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     page = new PageData({
         // autoStart: false // 设置为false时要手动触发，解开下面的page.run()注释即可
     });
-    dataList: People[];
+    // dataList: People[];
     showLoading = false;
     selected = 3;
 
@@ -47,13 +47,13 @@ export class AppComponent implements OnInit {
     }
 
     pageChanged(data) {
-        if (this.dataList) {
+        const list = this.page.list;
+        if (list && list.length > 0) {
             // 有数据的时候再进行刷新，避免这个错误：
             // ExpressionChangedAfterItHasBeenCheckedError
             this.showLoading = true;
         }
         const lacks = data && data.lacks;
-        // console.log(lacks);
         if (lacks) {
             this.friendService.request({
                 start: lacks.start,
@@ -66,10 +66,13 @@ export class AppComponent implements OnInit {
                     // console.log(body);
                     // 如果返回的数据格式跟People接口或类的定义有出入，
                     //      则这里要做一次数据的格式化
-                    this.dataList = body.list;
+                    // this.dataList = body.list;
                     this.page.total = body.total;
+                    this.page.addToList(body.list, body.start);
                 }
             });
+        } else {
+            this.showLoading = false;
         }
     }
 }

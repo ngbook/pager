@@ -1,36 +1,4 @@
-<div class="button-demo">
-    <h3>按钮组件Demo</h3>
-</div>
-<ng-button (click)="defaultClick()">测试默认</ng-button>
-<ng-button class="primary">测试primary</ng-button>
 
-<div class="select-demo">
-    <h3>select组件Demo</h3>
-</div>
-<div class="box">
-    <p class="desc">浏览器自带的输入框</p>
-    <select>
-        <option *ngFor="let opt of testChoices2">{{opt}}</option>
-    </select>
-</div>
-<div class="box">
-    <p class="desc">【普通下拉框，可以传入数组作为dataSrc】</p>
-    <ng-select [dataSrc]="testChoices2"></ng-select>
-</div>
-<div class="box">
-    <p class="desc">【设置宽度，并设置最长选项长度，选项框不自动隐藏】</p>
-    <ng-select defaultTxt="请选择" [dataSrc]="testChoices1" [autoHide]="false" maxWordCnt="5" width="120" (change)="optChanged($event)"></ng-select>
-</div>
-<div class="box">
-    <p class="desc">【使用[(ngModel)]做双向绑定】</p>
-    <p class="desc">（10秒后自动修改绑定的属性，设置选项为第2个）</p>
-    <ng-select [dataSrc]="testChoices3" [(ngModel)]="selected"></ng-select>
-    <p class="desc">选中的数据：{{selected}}</p>
-</div>
-
-<div class="pager-demo">
-    <h3>分页组件Demo</h3>
-</div>
 <div class="pager-container">
     <div class="tab-wrap">
         <table class="people-list" cellspacing="0">
@@ -47,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of dataList">
+                <tr *ngFor="let item of page.list">
                     <td>{{item.id}}</td>
                     <td>{{item.username}}</td>
                     <td>{{item.nickname}}</td>
@@ -61,10 +29,10 @@
                 </tr>
             </tbody>
         </table>
-        <div class="empty-wrap" *ngIf="!dataList || dataList.length === 0">
+        <div class="empty-wrap" *ngIf="!page.list || page.list.length === 0">
             数据加载中...
         </div>
-        <div class="loading" *ngIf="showLoading && dataList">
+        <div class="loading" *ngIf="showLoading && page.list">
             <p class="desc">数据加载中...</p>
         </div>
     </div>
