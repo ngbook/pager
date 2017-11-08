@@ -1,6 +1,7 @@
 import { Injectable, Inject, HostListener } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/interval';
@@ -10,8 +11,7 @@ export class DocEventService {
     public _winSize: {width: number, height: number};
     private docClickObserver: Observable<MouseEvent>;
 
-    constructor(@Inject(DOCUMENT) private document: any,
-            @Inject('WINDOW') private win: Window) {
+    constructor(@Inject(DOCUMENT) private document: any) {
         this.docClickObserver = Observable
             .fromEvent<MouseEvent>(document, 'click')
             .debounceTime<MouseEvent>(200); // 延迟200毫秒，多次点击只触发一次
@@ -34,10 +34,10 @@ export class DocEventService {
         return null;
     }
     private initWinSize() {
-        if (this.win) {
+        if (!!window) {
             this._winSize = {
-                width: this.win.innerWidth,
-                height: this.win.innerHeight,
+                width: window.innerWidth,
+                height: window.innerHeight,
             };
         }
     }

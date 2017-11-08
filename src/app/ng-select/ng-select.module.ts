@@ -19,7 +19,6 @@ import { DocEventService } from './document-event.service';
         NgSelectComponent,
     ],
     providers: [
-        { provide: 'WINDOW', useValue: window },
         DocEventService,
     ],
 })
@@ -31,5 +30,3 @@ export class NgSelectModule {
         };
     }
 }
-
-export { NgSelectComponent };
