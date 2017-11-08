@@ -89,5 +89,4 @@ export class NgPagerComponent implements OnInit {
     public goNextPage() {
         this.page.goNextPage();
     }
-
 }

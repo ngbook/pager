@@ -9,11 +9,6 @@ const DEFAULT_PAGE_SIZE = 10;
 const PAGER_NUMBER_COUNT_SHOWING = 5; // 分页的按钮最多只显示几个
 const CUR_PAGE_POS = 2; // 从0开始，不能超过PAGER_NUMBER_COUNT_SHOWING
 
-export interface DataSpan {
-    start: number;
-    end: number;
-}
-
 const OPTIONS_TO_UPDATE = [
     'curPage', 'pageSize', 'total',
     'pageSizeOpts', 'autoStart'
@@ -226,23 +221,18 @@ export class PageData {
         this.listChanged();
     }
     // 每次取回数据时，使用这个方法添加到缓存里
-    public addToList(rows, start?: number) {
-        // console.log(rows, start, this.cache.getList());
+    public addToCache(rows: any[], start?: number, total?: number) {
         if (!start) {
             start = 0;
         }
-        let isFirstAdd = false; // 是不是第一次添加
-        let list = this.cache.getList();
-        if (!list || list.length <= 0) {
-            isFirstAdd = true;
-            if (this._total === 0 && this.end === 0) {
-                this.end = this._pageSize; // 临时设置，让list至少有数据
-            }
+        if (total) {
+            this.total = total;
         }
         this.cache.addToList(rows, start);
-        if (!isFirstAdd && (this.end <= start ||
-            this.start >= start + rows.length)) { // 当前页没受影响
-        } else {
+        let list = this.cache.getList();
+        if (!list || list.length <= 0 || // 首次添加肯定要更新
+            // 或当前添加的数据，跨过了当前页（只要有一点点交叉）也要更新
+            this.end > start && this.start < start + rows.length) {
             this.updateList();
         }
     }
@@ -254,6 +244,7 @@ export class PageData {
                 end: this.end,
             };
         }
+        // 获取指定下标范围的一段数据返回
         return this.cache.getListOf(startEnd);
     }
     private updateList() {
@@ -291,5 +282,4 @@ export class PageData {
             this.changeDetectionRef.detectChanges();
         }
     }
-
 }
