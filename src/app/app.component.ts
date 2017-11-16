@@ -14,7 +14,7 @@ export class AppComponent {
         // 设置为false时要手动触发，适当的时候调用page.run()即可
         // autoStart: false
     });
-    private showLoading = false;
+    public showLoading = false;
 
     constructor(private friendService: GetFriendsService) { }
 
