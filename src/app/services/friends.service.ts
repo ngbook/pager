@@ -15,9 +15,5 @@ export class GetFriendsService extends RequestBase {
 
     request(data): Observable<any> {
         return this.post('people', data);
-        // .map((rsp) => {
-        //     // const body = rsp.body;
-        //     return rsp;
-        // });
     }
 }
