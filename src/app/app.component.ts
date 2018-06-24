@@ -3,7 +3,7 @@ import { PageData } from './ng-pager/ng-pager.model';
 import { GetFriendsService } from './services/friends.service';
 
 import { People } from './people.model';
-import 'rxjs/add/operator/finally'
+import 'rxjs/add/operator/finally';
 
 @Component({
     selector: 'app-root',
