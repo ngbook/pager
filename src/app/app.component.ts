@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PageData } from './ng-pager/ng-pager.model';
 import { GetFriendsService } from './services/friends.service';
 
-import { People } from './people.model';
+import 'rxjs/add/operator/finally';
 
 @Component({
     selector: 'app-root',
@@ -31,6 +31,8 @@ export class AppComponent {
             this.friendService.request({
                 start: lacks.start,
                 pageSize: lacks.end - lacks.start
+            }).finally(() => {
+                this.showLoading = false;
             }).subscribe((rsp) => {
                 const body = rsp && rsp.body && rsp.body.data;
                 if (body) {
