@@ -31,8 +31,6 @@ export class AppComponent {
             this.friendService.request({
                 start: lacks.start,
                 pageSize: lacks.end - lacks.start
-            }).finally(() => {
-                this.showLoading = false;
             }).subscribe((rsp) => {
                 const body = rsp && rsp.body && rsp.body.data;
                 if (body) {

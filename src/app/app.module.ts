@@ -3,7 +3,7 @@ import {
     NgModule,
     ErrorHandler
 } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -19,7 +19,7 @@ import { GlobalErrorHandler } from './services/global-error.event';
     ],
     imports: [
         BrowserModule,
-        HttpModule,
+        HttpClientModule,
         FormsModule,
         NgSelectModule.forRoot(),
         NgButtonModule,
