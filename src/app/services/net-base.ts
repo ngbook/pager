@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/finally';
 
-const API_BASE_URL = 'https://api.ngbook.techzto.com/';
+const API_BASE_URL = 'https://api.ngbook.net/';
 
 @Injectable()
 export class RequestBase {
