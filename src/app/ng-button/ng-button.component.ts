@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-type STYLE_TYPE = { [key: string]: number | string };
+interface StyleType {
+    [key: string]: number | string;
+}
 
 @Component({
     selector: 'ng-button',
@@ -10,7 +12,7 @@ type STYLE_TYPE = { [key: string]: number | string };
 })
 export class NgButtonComponent implements OnInit {
     @Input()
-    set styles(data: STYLE_TYPE) {
+    set styles(data: StyleType) {
         if (!data) {
             return;
         }

@@ -1,5 +1,5 @@
 import { Injectable, Inject, HostListener } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/observable/fromEvent';
@@ -8,7 +8,6 @@ import 'rxjs/add/observable/interval';
 
 @Injectable()
 export class DocEventService {
-    public _winSize: {width: number, height: number};
     private docClickObserver: Observable<MouseEvent>;
 
     constructor(@Inject(DOCUMENT) private document: any) {
@@ -18,11 +17,7 @@ export class DocEventService {
     }
 
     get winSize() {
-        if (!this._winSize) {
-            // 初始化window宽高
-            this.initWinSize();
-        }
-        return this._winSize;
+        return this.initWinSize();
     }
 
     public listen(callback) {
@@ -33,12 +28,15 @@ export class DocEventService {
         }
         return null;
     }
+
     private initWinSize() {
         if (!!window) {
-            this._winSize = {
+            return {
                 width: window.innerWidth,
                 height: window.innerHeight,
             };
+        } else {
+            return null;
         }
     }
 }
