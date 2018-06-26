@@ -31,7 +31,7 @@ export class NgButtonComponent implements OnInit {
     @Input()
     disabled = false;
 
-    _styles: STYLE_TYPE = {
+    _styles: StyleType = {
         'width.px': 50,
         'text-align': 'center',
         // padding: 0,
